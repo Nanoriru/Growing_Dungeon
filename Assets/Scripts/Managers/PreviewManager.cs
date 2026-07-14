@@ -6,38 +6,68 @@ public class PreviewManager : MonoBehaviour
     [SerializeField]
     private GameObject wallPreviewPrefab;
 
+    [SerializeField]
+    private GameObject monsterPreviewPrefab;
+
     private Renderer previewRenderer;
+
+    private GameObject wallPreview;
+    private GameObject monsterPreview;
 
     private GameObject currentPreview;
 
     private void Start()
     {
-        currentPreview = Instantiate(wallPreviewPrefab, transform);
-        currentPreview.SetActive(false);
+        wallPreview = Instantiate(wallPreviewPrefab, transform);
+        wallPreview.SetActive(false);
 
-        previewRenderer = currentPreview.GetComponent<MeshRenderer>();
+        monsterPreview = Instantiate(monsterPreviewPrefab, transform);
+        monsterPreview.SetActive(false);
     }
 
     public void MovePreview(Vector3 position)
     {
-        currentPreview.SetActive(true);
+        if (currentPreview == null)
+            return;
 
-        position.y += 0.25f;
+        currentPreview.SetActive(true);
 
         currentPreview.transform.position = position;
     }
 
     public void HidePreview()
     {
+        if (currentPreview == null)
+            return;
+
         currentPreview.SetActive(false);
     }
 
-    public void SetCanPlace(bool canPlace)
+    public void SetPreview(BuildMode mode)
     {
-        Color color = canPlace ? Color.cyan : Color.red;
+        if (wallPreview != null)
+            wallPreview.SetActive(false);
 
-        color.a = 0.5f;
+        if (monsterPreview != null)
+            monsterPreview.SetActive(false);
 
-        previewRenderer.material.color = color;
+        switch (mode)
+        {
+            case BuildMode.Wall:
+                currentPreview = wallPreview;
+                previewRenderer = wallPreview.GetComponentInChildren<MeshRenderer>();
+                break;
+
+            case BuildMode.Monster:
+                currentPreview = monsterPreview;
+                previewRenderer = monsterPreview.GetComponentInChildren<SpriteRenderer>();
+                break;
+
+            default:
+                currentPreview = null;
+                previewRenderer = null;
+                break;
+        }
+        
     }
 }

@@ -21,4 +21,25 @@ public class Tile : MonoBehaviour
     {
         return Type == TileType.Floor;
     }
+
+    public bool CanPlace(BuildMode mode)
+    {
+        switch (mode)
+        {
+            case BuildMode.Wall:
+                return CanPlaceWall();
+
+            case BuildMode.Monster:
+                return CanPlaceWall();
+
+            case BuildMode.Trap:
+                return CanPlaceWall();
+
+            case BuildMode.Treasure:
+                return CanPlaceWall();
+
+            default:
+                return false;
+        }
+    }
 }
